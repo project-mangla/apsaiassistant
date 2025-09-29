@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}APS Mangla Assistant{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card mt-4 chat-card">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-graduation-cap me-2"></i>APS Mangla Assistant
+                    </h4>
+                    <small><i class="fas fa-robot me-1"></i>Ask me anything about our school!</small>
+                </div>
+                
+                <!-- Chat messages container -->
+                <div class="card-body chat-body" id="chatContainer">
+                    <div class="chat-message bot-message">
+                        <div class="message-content">
+                            <i class="fas fa-robot me-2"></i>
+                            Hello! 👋 I'm your APS Mangla virtual assistant. I can help you with information about our school, including details about our principal, subjects like ICS, facilities, policies, and much more. Feel free to ask me anything about APS Mangla!
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat input form -->
+                <div class="card-footer">
+                    <form id="chatForm">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="messageInput" 
+                                placeholder="Type your question about APS Mangla..." required
+                                autocomplete="off">
+                            <button class="btn btn-success" type="submit" id="sendBtn">
+                                <i class="fas fa-paper-plane"></i> Send
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Quick suggestions -->
+                    <div class="mt-2">
+                        <small class="text-muted me-2">Quick questions:</small>
+                        <button class="btn btn-outline-success btn-sm me-1 suggestion-btn" 
+                                data-suggestion="Who is the principal?">
+                            <i class="fas fa-user-tie me-1"></i>Principal
+                        </button>
+                        <button class="btn btn-outline-success btn-sm me-1 suggestion-btn" 
+                                data-suggestion="What subjects are in ICS?">
+                            <i class="fas fa-book me-1"></i>ICS Subjects
+                        </button>
+                        <button class="btn btn-outline-success btn-sm suggestion-btn" 
+                                data-suggestion="What can you help me with?">
+                            <i class="fas fa-question-circle me-1"></i>Help
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Status indicator -->
+            <div class="text-center mt-3">
+                <small class="text-muted" id="statusMessage">
+                    <i class="fas fa-circle text-success"></i> Ready to help with APS Mangla information
+                </small>
+            </div>
+            
+            <!-- Info card -->
+            <div class="card mt-3 info-card">
+                <div class="card-body text-center">
+                    <h6 class="card-title">
+                        <i class="fas fa-info-circle me-2 text-success"></i>About This Assistant
+                    </h6>
+                    <p class="card-text small text-muted mb-0">
+                        I'm designed specifically for APS Mangla. I can provide information about staff, curriculum, 
+                        facilities, and general school matters. If you need help with something not school-related, 
+                        please contact the appropriate department directly.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - APS Mangla Assistant{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card mt-5 login-card">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-shield-alt fa-4x text-primary mb-3"></i>
+                        <h3 class="card-title">Admin Access</h3>
+                        <p class="text-muted">Manage APS Mangla Assistant Knowledge Base</p>
+                    </div>
+
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                <i class="fas fa-user me-2"></i>Username
+                            </label>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   required autocomplete="username" placeholder="Enter your username">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Password
+                            </label>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   required autocomplete="current-password" placeholder="Enter your password">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-3">
+                            <i class="fas fa-sign-in-alt me-2"></i>Access Admin Panel
+                        </button>
+                    </form>
+
+                    <div class="text-center">
+                        <div class="alert alert-info mb-0" role="alert">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <small>
+                                <strong>Default credentials:</strong><br>
+                                Username: <code>admin</code><br>
+                                Password: <code>admin</code>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Admin features preview -->
+                <div class="card-footer bg-transparent">
+                    <div class="text-center">
+                        <small class="text-muted">
+                            <i class="fas fa-cogs me-2"></i>Admin Panel Features:
+                        </small>
+                        <div class="mt-2">
+                            <span class="badge bg-secondary me-1">
+                                <i class="fas fa-plus me-1"></i>Add Q&A
+                            </span>
+                            <span class="badge bg-secondary me-1">
+                                <i class="fas fa-edit me-1"></i>Edit Content
+                            </span>
+                            <span class="badge bg-secondary">
+                                <i class="fas fa-trash me-1"></i>Manage Data
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Back to chat link -->
+            <div class="text-center mt-3">
+                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Chat
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.login-card {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border: none;
+    border-radius: 10px;
+}
+
+.login-card .card-body {
+    padding: 2rem;
+}
+
+.form-control:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+</style>
+{% endblock %}
