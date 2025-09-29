@@ -1,0 +1,15 @@
+{
+  "qa_pairs": [
+    {
+      "id": 1,
+      "question": "Who is the principal of APS Mangla?",
+      "answer": "Talat Wazir is the principal of APS Mangla"
+    },
+    {
+      "id": 2,
+      "question": "What subjects are taught in ICS?",
+      "answer": "ICS subjects include Physics, Maths, Computer, English, Urdu and Islamiyat for 1st year. For 2nd year, Pak Studies replaces Islamiyat"
+    }
+  ],
+  "embeddings": []
+}
