@@ -1,0 +1,332 @@
+================================
+APS MANGLA CHATBOT DEPLOYMENT GUIDE
+================================
+
+This guide explains how to deploy the APS Mangla chatbot (AmmazChat) on live hosting platforms.
+
+PREREQUISITES
+=============
+- Python 3.8 or higher
+- Google Gemini API key
+- Web hosting service that supports Python/Flask applications
+
+SUPPORTED HOSTING PLATFORMS
+===========================
+✓ Heroku
+✓ Railway
+✓ PythonAnywhere
+✓ DigitalOcean App Platform
+✓ Google Cloud Platform
+✓ AWS Elastic Beanstalk
+✓ Vercel (with serverless functions)
+✓ Hostinger (shared hosting with cPanel)
+✓ GoDaddy (shared hosting with cPanel)
+✓ Bluehost (shared hosting with cPanel)
+✓ SiteGround (shared hosting with cPanel)
+✓ Any shared hosting with Python/CGI support
+✓ Any VPS with Python support
+
+STEP 1: PREPARE YOUR FILES
+==========================
+1. Download/extract the ammazchat folder
+2. Ensure all files are present:
+   - app.py, main.py, ai_service.py, data_manager.py
+   - templates/ folder with HTML files
+   - static/ folder with CSS, JS, and images
+   - data/ folder with JSON files
+   - requirements.txt
+
+STEP 2: GET GOOGLE GEMINI API KEY
+================================
+1. Go to https://ai.google.dev/
+2. Sign in with your Google account
+3. Create a new project or select existing one
+4. Navigate to "Get API Key" 
+5. Generate a new API key
+6. Copy and save the API key securely
+
+STEP 3: DEPLOYMENT METHODS
+=========================
+
+METHOD A: HEROKU DEPLOYMENT
+---------------------------
+1. Install Heroku CLI: https://devcenter.heroku.com/articles/heroku-cli
+2. Login to Heroku: heroku login
+3. Navigate to ammazchat folder: cd ammazchat
+4. Initialize git: git init
+5. Create Heroku app: heroku create your-chatbot-name
+6. Set environment variables:
+   heroku config:set GEMINI_API_KEY=your_api_key_here
+   heroku config:set SESSION_SECRET=random_secret_string
+7. Create Procfile:
+   echo "web: gunicorn --bind 0.0.0.0:\$PORT main:app" > Procfile
+8. Commit and deploy:
+   git add .
+   git commit -m "Deploy APS Mangla Chatbot"
+   git push heroku main
+
+METHOD B: RAILWAY DEPLOYMENT
+----------------------------
+1. Go to railway.app and sign up
+2. Create new project from GitHub (upload your code first)
+3. Connect your repository
+4. Set environment variables in Railway dashboard:
+   - GEMINI_API_KEY: your_api_key_here
+   - SESSION_SECRET: random_secret_string
+5. Railway will auto-detect Python and deploy using requirements.txt
+6. Your app will be available at provided Railway URL
+
+METHOD C: PYTHONANYWHERE DEPLOYMENT
+----------------------------------
+1. Sign up at pythonanywhere.com
+2. Upload ammazchat folder to your account
+3. Go to Web tab and create new web app
+4. Choose Flask framework
+5. Set source code path to your ammazchat folder
+6. Set WSGI configuration file to point to main.py
+7. Add environment variables in Files tab (.env file):
+   GEMINI_API_KEY=your_api_key_here
+   SESSION_SECRET=random_secret_string
+8. Reload web app
+
+METHOD D: SHARED HOSTING (HOSTINGER, GODADDY, BLUEHOST etc.)
+-----------------------------------------------------------
+IMPORTANT: Your hosting must support Python and CGI/FastCGI
+
+Prerequisites Check:
+- Login to cPanel
+- Check if Python is available (usually in Software section)
+- Verify Python version (need 3.8+)
+- Check if pip is available
+
+Step-by-Step Deployment:
+
+1. PREPARE FILES FOR SHARED HOSTING:
+   Create these additional files in your ammazchat folder:
+
+   A) Create .htaccess file:
+   ```
+   RewriteEngine On
+   RewriteCond %{REQUEST_FILENAME} !-f
+   RewriteCond %{REQUEST_FILENAME} !-d
+   RewriteRule ^(.*)$ cgi-bin/main.py/$1 [QSA,L]
+   
+   # Handle static files
+   RewriteCond %{REQUEST_URI} ^/static/
+   RewriteRule ^static/(.*)$ static/$1 [L]
+   ```
+
+   B) Create wsgi.py file:
+   ```python
+   #!/usr/bin/python3
+   import sys
+   import os
+   
+   # Add your project directory to Python path
+   sys.path.insert(0, '/home/username/public_html/ammazchat')
+   
+   # Set environment variables
+   os.environ['GEMINI_API_KEY'] = 'your_api_key_here'
+   os.environ['SESSION_SECRET'] = 'your_secret_key_here'
+   
+   from app import app as application
+   
+   if __name__ == "__main__":
+       application.run()
+   ```
+
+   C) Create passenger_wsgi.py (for Passenger servers):
+   ```python
+   import sys
+   import os
+   
+   # Add your project directory to Python path
+   sys.path.insert(0, '/home/username/public_html/ammazchat')
+   
+   # Set environment variables
+   os.environ['GEMINI_API_KEY'] = 'your_api_key_here'
+   os.environ['SESSION_SECRET'] = 'your_secret_key_here'
+   
+   from app import app as application
+   ```
+
+2. UPLOAD FILES TO HOSTING:
+   - Login to cPanel File Manager
+   - Navigate to public_html folder
+   - Create 'ammazchat' folder inside public_html
+   - Upload all ammazchat files to public_html/ammazchat/
+   - Upload wsgi.py and passenger_wsgi.py to public_html/
+   - Upload .htaccess to public_html/
+
+3. INSTALL PYTHON DEPENDENCIES:
+   Option A - SSH Access (if available):
+   - SSH into your server: ssh username@yourserver.com
+   - Navigate to ammazchat: cd public_html/ammazchat
+   - Install dependencies: pip3 install --user -r requirements.txt
+   
+   Option B - cPanel Python App (if available):
+   - Go to cPanel → Python App
+   - Create new application pointing to ammazchat folder
+   - Set startup file to main.py
+   - Install dependencies from requirements.txt
+
+   Option C - Manual Installation (if pip not available):
+   - Download Python packages manually
+   - Upload to a 'lib' folder in your project
+   - Modify Python files to include: sys.path.insert(0, 'lib')
+
+4. SET PERMISSIONS:
+   - Set folder permissions to 755 for ammazchat folder
+   - Set file permissions to 644 for Python files
+   - Set executable permissions (755) for wsgi.py and passenger_wsgi.py
+   - Set writable permissions (755) for data/ folder
+
+5. CONFIGURE ENVIRONMENT:
+   Edit wsgi.py and passenger_wsgi.py with your actual:
+   - API key
+   - Secret key
+   - Correct file paths
+
+6. TEST DEPLOYMENT:
+   - Visit: yourdomain.com/ammazchat
+   - Or setup subdomain: chatbot.yourdomain.com
+
+HOSTINGER SPECIFIC STEPS:
+-------------------------
+1. Login to Hostinger hPanel
+2. Go to File Manager
+3. Navigate to public_html
+4. Upload ammazchat folder
+5. Go to Advanced → Python
+6. Create Python app:
+   - App root: public_html/ammazchat
+   - Startup file: main.py
+   - Python version: 3.8+ (latest available)
+7. Install requirements.txt dependencies
+8. Set environment variables in Python app settings
+9. Start the application
+
+GODADDY SPECIFIC STEPS:
+----------------------
+1. Login to GoDaddy cPanel
+2. File Manager → public_html
+3. Upload all files
+4. Terminal (if available) or SSH:
+   cd public_html/ammazchat
+   python3 -m pip install --user -r requirements.txt
+5. Create .htaccess with CGI configuration
+6. Test at yourdomain.com/ammazchat
+
+TROUBLESHOOTING SHARED HOSTING:
+-------------------------------
+- Check error logs in cPanel → Error Logs
+- Verify Python version: python3 --version
+- Check file permissions (folders: 755, files: 644)
+- Ensure data folder is writable
+- Verify environment variables are set correctly
+- Check if hosting supports required Python modules
+- Contact hosting support if Python modules missing
+
+METHOD E: VPS/DEDICATED SERVER
+------------------------------
+1. Install Python 3.8+ and pip
+2. Upload ammazchat folder to server
+3. Install dependencies: pip install -r requirements.txt
+4. Set environment variables:
+   export GEMINI_API_KEY=your_api_key_here
+   export SESSION_SECRET=random_secret_string
+5. Install and configure nginx/apache (optional)
+6. Run with gunicorn: gunicorn --bind 0.0.0.0:5000 main:app
+7. For production, use process manager like systemd or supervisor
+
+STEP 4: ENVIRONMENT VARIABLES
+=============================
+Set these environment variables on your hosting platform:
+
+GEMINI_API_KEY=your_google_gemini_api_key
+SESSION_SECRET=any_random_secret_string_for_sessions
+
+Example values:
+GEMINI_API_KEY=AIzaSyC7xxxxxxxxxxxxxxxxxxxxxxxxxxx
+SESSION_SECRET=mysecretkey123!@#
+
+STEP 5: VERIFY DEPLOYMENT
+========================
+1. Visit your deployed URL
+2. Test the chatbot interface
+3. Try asking questions like:
+   - "Who is the principal?"
+   - "What subjects are in ICS?"
+   - "Hello" (test greetings)
+4. Test admin panel at /admin/login
+   - Default: admin/admin
+   - Add sample Q&A pairs
+5. Check follow-up functionality:
+   - Ask a question, then ask "and?" or "what else?"
+
+STEP 6: CUSTOMIZE FOR YOUR SCHOOL
+=================================
+1. Access admin panel (/admin/login)
+2. Add your school's specific information
+3. Update Q&A pairs with relevant content
+4. Change admin password from default
+5. Test all functionality
+
+TROUBLESHOOTING
+===============
+
+Common Issues:
+- Missing GEMINI_API_KEY: Set environment variable properly
+- Import errors: Ensure all files uploaded correctly
+- 500 errors: Check server logs for Python errors
+- Chatbot not responding: Verify API key is valid and has credits
+
+Port Configuration:
+- Most hosting platforms auto-assign ports
+- If needed, app runs on 0.0.0.0:5000 by default
+- For custom ports, modify main.py: app.run(host='0.0.0.0', port=PORT)
+
+File Permissions:
+- Ensure data/ folder is writable for Q&A updates
+- JSON files should have read/write permissions
+
+API Limits:
+- Google Gemini has usage quotas
+- Monitor API usage in Google Cloud Console
+- Implement rate limiting if needed for high traffic
+
+MAINTENANCE
+===========
+- Regularly backup data/qa_data.json file
+- Monitor API usage and costs
+- Update admin credentials periodically
+- Review and improve Q&A content based on user feedback
+- Keep dependencies updated (pip freeze > requirements.txt)
+
+SECURITY BEST PRACTICES
+=======================
+- Never commit API keys to version control
+- Use strong SESSION_SECRET
+- Change default admin credentials
+- Enable HTTPS on your hosting platform
+- Regularly update Python dependencies
+- Monitor application logs for suspicious activity
+
+SCALING CONSIDERATIONS
+=====================
+- For high traffic, consider database instead of JSON files
+- Implement caching for frequently asked questions
+- Use load balancer for multiple server instances
+- Monitor response times and optimize if needed
+- Consider CDN for static assets
+
+SUPPORT
+=======
+For technical issues:
+1. Check server logs first
+2. Verify environment variables are set
+3. Test API key separately
+4. Review deployment steps
+5. Contact your hosting provider support if needed
+
+Remember to test thoroughly before making the chatbot live for students!
